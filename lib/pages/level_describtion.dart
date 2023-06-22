@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:multi_quiz_s_t_tt9/pages/true_false_q_screen.dart';
+import 'package:multi_quiz_s_t_tt9/modules/level.dart';
+
+import '../widgets/my_outline_btn.dart';
+
 
 import '../constants.dart';
 import '../widgets/my_outline_btn.dart';
@@ -9,112 +12,83 @@ import 'multiple_q_screen.dart';
 class LevelDescription extends StatelessWidget {
   const LevelDescription({Key? key}) : super(key: key);
 
+
   @override
   Widget build(BuildContext context) {
-    var questionNumber = 5;
-    var questionsCount = 10;
+    final modelRoute = ModalRoute.of(context)?.settings.arguments as Map<String, Level>;
+    final args = modelRoute["levelData"];
+
     return Scaffold(
       body: Container(
+        height: double.infinity,
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              kBlueBg,
-              kL2,
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
+            gradient: LinearGradient(colors:args!.colors, begin: Alignment.topCenter, end: Alignment.bottomCenter)),
         child: Padding(
-          padding: const EdgeInsets.only(top: 74, left: 24, right: 24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                    height: 44,
-                    width: 44,
-                    child: MYOutlineBtn(
-                      icon: Icons.close,
-                      iconColor: Colors.white,
-                      bColor: Colors.white,
-                      function: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              Expanded(
-                flex: 3,
-                child: Center(
-                  child: Image.asset('assets/images/ballon-b.png'),
+          padding: const EdgeInsets.only(top: 74, left: 16, right: 4),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                MYOutlineBtn(icon: Icons.close, function: (){
+                  Navigator.pop(context);
+                }, bColor: Colors.white60, iconColor: Colors.white),
+                Padding(
+                  padding: const EdgeInsets.all(34.0),
+                  child: Center(child: Image.asset(args.image,)),
                 ),
-              ),
-              Text(
-                'question $questionNumber of $questionsCount',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontFamily: 'Sf-Pro-Text',
-                  color: Colors.white60,
+                Text(
+                  args.levelText,
+                  style: const TextStyle(
+                      color: Colors.white60,
+                      fontSize: 18,
+                      fontFamily: "sf-pro-Text"),
                 ),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              Text(
-                'In Which City of Germany Is the Largest Port?',
-                style: TextStyle(
-                  fontSize: 32,
-                  fontFamily: 'Sf-Pro-Text',
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
+                const Text(
+                  "Continuing",
+                  style: TextStyle(
+                      fontSize: 32,
+                      fontFamily: "sf-pro-Text",
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
                 ),
-              ),
-              Text(
-                'question  dhjvajak jklfsakljvabvjkfabjsk \n cdklbvcjksabcddhsaj',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontFamily: 'Sf-Pro-Text',
-                  color: Colors.white60,
+                Text(
+                  args.description,
+                  style: const TextStyle(
+                      fontSize: 18,
+                      fontFamily: "sf-pro-Text",
+                      fontWeight: FontWeight.normal,
+                      color: Colors.white),
                 ),
-              ),
-              Spacer(),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => TrueFalseQuiz(),
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                  ),
-                  child: Expanded(
-                    child: Center(
-                      child: Text(
-                        'Game',
-                        style: TextStyle(
-                            color: kL2,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 18),
+                const SizedBox(height: 60,),
+                ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.all(20.0),
+                      foregroundColor: Colors.blue,
+                      backgroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0),
                       ),
                     ),
-                  ),
-                ),
-              ),
-              Spacer()
-            ],
+                    onPressed: (){},
+                    child: const Row(
+                      children: [
+                        SizedBox(
+                          width: 24,
+                        ),
+                        Expanded(
+                          child: Center(
+                            child: Text(
+                              "Play",
+                              style: TextStyle(
+                                  fontSize: 24
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )),
+              ],
+            ),
           ),
         ),
       ),

@@ -9,7 +9,7 @@ class MyLevelWidget extends StatelessWidget {
   final String subtitle;
   final String image;
   final List<Color> colors;
-//sjjsj
+
   const MyLevelWidget({
     Key? key,
     required this.function,
