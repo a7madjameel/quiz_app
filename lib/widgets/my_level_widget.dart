@@ -10,8 +10,6 @@ class MyLevelWidget extends StatelessWidget {
   final String image;
   final List<Color> colors;
 
-  //brach zaki
-
   const MyLevelWidget({
     Key? key,
     required this.function,
