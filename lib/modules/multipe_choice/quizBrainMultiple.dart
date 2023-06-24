@@ -4,12 +4,26 @@ class QuizBrainMulti {
   int _questionNumber = 0;
 
   final List<QuestionMultiple> _questionBank = [
-    QuestionMultiple('You can lead a cow down stairs but not up stairs.', 1,
-        ['always', 'never', 'sometimes']),
     QuestionMultiple(
-        'Approximately one quarter of human bones are in the feet.',
-        0,
-        ['agree', 'disagree', 'not sure']),
+      'You can lead a cow down stairs but not up stairs.',
+      1,
+      ['always', 'never', 'sometimes'],
+    ),
+    QuestionMultiple(
+      'Approximately one quarter of human bones are in the feet.',
+      0,
+      ['agree', 'disagree', 'not sure'],
+    ),
+    QuestionMultiple(
+      'Which programming language is used for Flutter development?',
+      2,
+      ['Java', 'Swift', 'Dart'],
+    ),
+    QuestionMultiple(
+      'Which widget is used to create a button in Flutter?',
+      1,
+      ['Text', 'RaisedButton', 'Image'],
+    ),
   ];
 
   String getQuestionText() {

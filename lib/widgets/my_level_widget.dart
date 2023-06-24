@@ -29,8 +29,8 @@ class MyLevelWidget extends StatelessWidget {
         children: [
           Container(
             width: double.infinity,
-            margin: EdgeInsets.only(top: 54, bottom: 24),
-            padding: EdgeInsets.all(24),
+            margin: const EdgeInsets.only(top: 54, bottom: 24),
+            padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: colors,
@@ -53,23 +53,19 @@ class MyLevelWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 12,
-                ),
+                const SizedBox(height: 12),
                 Text(
                   subtitle,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16,
                     color: Colors.white60,
                     fontFamily: kFontFamily,
                   ),
                 ),
-                SizedBox(
-                  height: 4,
-                ),
+                const SizedBox(height: 4),
                 Text(
                   title,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 32,
                     color: Colors.white,
                     fontWeight: FontWeight.bold,

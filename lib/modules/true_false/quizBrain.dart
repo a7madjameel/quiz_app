@@ -12,8 +12,13 @@ class QuizBrain {
       'Approximately one quarter of human bones are in the feet.',
       true,
     ),
+    Question('A slug\'s blood is green.', true),
     Question(
-      'A slug\'s blood is green.',
+      'Flutter is difficult to manage because it’s a new framework.',
+      false,
+    ),
+    Question(
+      'Flutter supports desktop application development.',
       true,
     ),
   ];

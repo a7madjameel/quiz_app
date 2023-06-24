@@ -104,36 +104,7 @@ class _MultiQScreenState extends State<MultiQScreen> {
                       },
                     ),
                   ),
-                  // OutlinedButton(
-                  //   onPressed: () {},
-                  //   style: ButtonStyle().copyWith(
-                  //     shape: MaterialStatePropertyAll(
-                  //       RoundedRectangleBorder(
-                  //         borderRadius: BorderRadius.circular(25),
-                  //       ),
-                  //     ),
-                  //     side: MaterialStatePropertyAll(
-                  //       BorderSide(color: Colors.white),
-                  //     ),
-                  //   ),
-                  //   child: Row(
-                  //     children: [
-                  //       Icon(
-                  //         Icons.favorite,
-                  //         color: Colors.white,
-                  //       ),
-                  //       SizedBox(
-                  //         width: 8,
-                  //       ),
-                  //       const Text(
-                  //         '3',
-                  //         style: TextStyle(color: Colors.white),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
-
-                   Stack(
+                  Stack(
                     alignment: Alignment.center,
                     children: [
                       SizedBox(
@@ -156,19 +127,18 @@ class _MultiQScreenState extends State<MultiQScreen> {
                       )
                     ],
                   ),
-
                   OutlinedButton(
                     onPressed: () {},
                     style: OutlinedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                        side: const BorderSide(color: Colors.white)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      side: const BorderSide(color: Colors.white),
+                    ),
                     child: const Icon(
                       Icons.favorite,
                       color: Colors.white,
                     ),
-
                   )
                 ],
               ),
@@ -209,21 +179,23 @@ class _MultiQScreenState extends State<MultiQScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
-                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 12,
+                      horizontal: 16,
+                    ),
                   ),
                   child: const Row(
                     children: [
-                      SizedBox(
-                        width: 24,
-                      ),
+                      SizedBox(width: 24),
                       Expanded(
                         child: Center(
                           child: Text(
                             'Bremen',
                             style: TextStyle(
-                                color: kL2,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 18),
+                              color: kL2,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 18,
+                            ),
                           ),
                         ),
                       ),
@@ -244,7 +216,8 @@ class _MultiQScreenState extends State<MultiQScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
-                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 12, horizontal: 16),
                   ),
                   child: const Row(
                     children: [
@@ -279,7 +252,10 @@ class _MultiQScreenState extends State<MultiQScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
-                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 12,
+                      horizontal: 16,
+                    ),
                   ),
                   child: const Row(
                     children: [

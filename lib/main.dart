@@ -10,16 +10,17 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       initialRoute: "/",
       routes: {
-        "/" :  (context) => const HomePage(),
-        "/description" :  (context) => const LevelDescription(),
-        "/multi_question" :  (context) => const MultiQScreen(),
-        "/true_false_question" :  (context) => TrueFalseQuiz(),
+        "/": (context) => const HomePage(),
+        "/description": (context) => const LevelDescription(),
+        "/multi_question": (context) => const MultiQScreen(),
+        "/true_false_question": (context) => TrueFalseQuiz(),
       },
     );
   }

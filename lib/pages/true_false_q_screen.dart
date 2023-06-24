@@ -9,13 +9,13 @@ import '../widgets/my_outline_btn.dart';
 import 'home.dart';
 
 class TrueFalseQuiz extends StatefulWidget {
+  const TrueFalseQuiz({super.key});
 
   @override
   _TrueFalseQuizState createState() => _TrueFalseQuizState();
 }
 
 class _TrueFalseQuizState extends State<TrueFalseQuiz> {
-
   TimerUtils? timerInQuiz;
   double? loadingValue = 1;
   int? timerValue = 10;
@@ -26,9 +26,9 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
   QuizBrain quizBrain = QuizBrain();
   List<Icon> scoreKeeper = [];
   int counter = 10;
+  bool isVisible = false;
 
   // int? _choice;
-
 
   @override
   void initState() {
@@ -40,8 +40,10 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
     cancelTimer();
     setState(() {
       nextBtnAvailable = true;
+      isVisible = true;
       allChoicesBtn = false;
     });
+
     bool correctAnswer = quizBrain.getQuestionAnswer();
     setState(() {
       if (correctAnswer == userChoice) {
@@ -64,7 +66,6 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
     if (quizBrain.isFinished()) {
       Timer(const Duration(seconds: 1), () {
         //show result dialog
-        // Alert(context: context, title: "Finished", desc: "you are done").show();
         setState(() {
           quizBrain.reset();
           scoreKeeper.clear();
@@ -101,12 +102,13 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
     startTimer();
   }
 
-  void nextQuestion(){
+  void nextQuestion() {
     quizBrain.nextQuestion();
     restartTimer();
     setState(() {
       allChoicesBtn = true;
       nextBtnAvailable = false;
+      isVisible = false;
     });
   }
 
@@ -148,9 +150,6 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
                       iconColor: Colors.white,
                       bColor: Colors.white,
                       function: () {
-                        // Navigator.pop(context);
-                        // Navigator.pop(context);
-
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
@@ -195,7 +194,7 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
                       Icons.favorite,
                       color: Colors.white,
                     ),
-                  )
+                  ),
                 ],
               ),
               Expanded(
@@ -221,10 +220,12 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
                     style: const ButtonStyle(
                       backgroundColor: MaterialStatePropertyAll(Colors.green),
                     ),
-                    onPressed: allChoicesBtn == true ? () {
-                      //The user picked true.
-                      checkAnswer(true);
-                    } : null,
+                    onPressed: allChoicesBtn == true
+                        ? () {
+                            //The user picked true.
+                            checkAnswer(true);
+                          }
+                        : null,
                     child: const Text(
                       'True',
                       style: TextStyle(
@@ -232,7 +233,6 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
                         fontSize: 20.0,
                       ),
                     ),
-
                   ),
                 ),
               ),
@@ -244,10 +244,12 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
                       backgroundColor:
                           const MaterialStatePropertyAll(Colors.red),
                     ),
-                    onPressed: allChoicesBtn == true ? () {
-                      //The user picked false.
-                      checkAnswer(false);
-                    } : null,
+                    onPressed: allChoicesBtn == true
+                        ? () {
+                            //The user picked false.
+                            checkAnswer(false);
+                          }
+                        : null,
                     child: const Text(
                       'False',
                       style: TextStyle(
@@ -264,20 +266,29 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
               const SizedBox(
                 height: 72,
               ),
-              TextButton(
-                  onPressed: nextBtnAvailable == true ? nextQuestion : null,
-                  child: Text(
-                    "next",
-                    style: nextBtnAvailable == true
-                        ? const TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                          )
-                        : const TextStyle(
-                            color: Colors.grey,
-                            fontSize: 18,
-                          ),
-                  ))
+              Visibility(
+                visible: isVisible,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    TextButton(
+                      onPressed: nextBtnAvailable == true ? nextQuestion : null,
+                      child: Text(
+                        "Next",
+                        style: nextBtnAvailable == true
+                            ? const TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                              )
+                            : const TextStyle(
+                                color: Colors.grey,
+                                fontSize: 20,
+                              ),
+                      ),
+                    ),
+                  ],
+                ),
+              )
             ],
           ),
         ),

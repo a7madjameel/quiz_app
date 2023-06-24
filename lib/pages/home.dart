@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:multi_quiz_s_t_tt9/constants.dart';
 import 'package:multi_quiz_s_t_tt9/database/levels.dart';
-import 'package:multi_quiz_s_t_tt9/pages/level_describtion.dart';
-import 'package:multi_quiz_s_t_tt9/pages/multiple_q_screen.dart';
 import 'package:multi_quiz_s_t_tt9/widgets/my_outline_btn.dart';
 
 import '../widgets/my_level_widget.dart';
@@ -30,6 +28,9 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
+          const SizedBox(
+            height: 16,
+          ),
           MYOutlineBtn(
             icon: Icons.favorite,
             iconColor: kBlueIcon,
@@ -43,9 +44,9 @@ class _HomePageState extends State<HomePage> {
               iconColor: kBlueIcon,
               bColor: kGreyFont.withOpacity(0.5),
               function: () {
-                print("2222");
+                print("0595856486");
               }),
-          SizedBox(
+          const SizedBox(
             width: 16,
           )
         ],

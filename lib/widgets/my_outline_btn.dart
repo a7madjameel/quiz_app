@@ -6,6 +6,7 @@ class MYOutlineBtn extends StatelessWidget {
   final Color iconColor;
   final OutlinedBorder shapeBorder;
   final Function() function;
+
   const MYOutlineBtn({
     Key? key,
     required this.icon,
@@ -19,18 +20,21 @@ class MYOutlineBtn extends StatelessWidget {
   Widget build(BuildContext context) {
     return OutlinedButton(
       onPressed: function,
+      style: const ButtonStyle().copyWith(
+        shape: MaterialStatePropertyAll(
+          shapeBorder,
+        ),
+        side: MaterialStatePropertyAll(
+          BorderSide(color: bColor),
+        ),
+        padding: const MaterialStatePropertyAll(
+          EdgeInsets.all(8),
+        ),
+      ),
       child: Icon(
         icon,
         color: iconColor,
       ),
-      style: ButtonStyle().copyWith(
-          shape: MaterialStatePropertyAll(
-            shapeBorder,
-          ),
-          side: MaterialStatePropertyAll(
-            BorderSide(color: bColor),
-          ),
-          padding: MaterialStatePropertyAll(EdgeInsets.all(8))),
     );
   }
 }
