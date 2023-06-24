@@ -1,8 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:multi_quiz_s_t_tt9/pages/home.dart';
 import 'package:multi_quiz_s_t_tt9/widgets/my_outline_btn.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 import '../constants.dart';
+import '../modules/multipe_choice/quizBrainMultiple.dart';
 import '../modules/timer_utils.dart';
 
 class MultiQScreen extends StatefulWidget {
@@ -14,32 +19,96 @@ class MultiQScreen extends StatefulWidget {
 
 class _MultiQScreenState extends State<MultiQScreen> {
   TimerUtils? timerInQuiz;
-  double? loadingValue = 1;
-  int? timerValue = 10;
+  double? loadingValue;
+  int? timerValue;
+  QuizBrainMulti quizBrainMulti = QuizBrainMulti();
+  int? userChoice;
+  bool? isCorrect;
+  int questionsCount = 0;
+  int correctAnswersCount = 0;
+  int? score ;
+  int questionNumber = 1;
+  bool nextBtnAvailable = false;
+  bool isVisible = false;
+  bool isOptionSelected = false;
+  void checkAnswer() {
+    int correctAnswer = quizBrainMulti.getQuestionAnswer();
+    cancelTimer();
+    setState(() {
+      if (correctAnswer == userChoice) {
+        isCorrect = true;
+        correctAnswersCount++;
+      } else {
+        isCorrect = false;
+      }
+    });
 
+    if (quizBrainMulti.isFinished()) {
+      Timer(const Duration(seconds: 1), () {
+        setState(() {
+          quizBrainMulti.reset();
+        });
+      });
+    }
+  }
+  void nextQuestion() {
+    quizBrainMulti.nextQuestion();
+    restartTimer();
+    setState(() {
+      isOptionSelected=!isOptionSelected;
+
+      if (questionNumber != questionsCount) {
+        userChoice =null;
+        //allChoicesBtn = true;
+        nextBtnAvailable = false;
+        isVisible = false;
+        questionNumber++;
+      } else {
+        score = (correctAnswersCount * 100 / questionsCount).round();
+
+        showCustomAlert();
+      }
+    });
+  }
+   bool scoreStatus()=>score!> 50?true:false;
+
+  bool isAlertShown = false;
+
+  void showCustomAlert() {
+    if (isAlertShown) {
+      return; // Don't show the alert if it has already been shown
+    }
+    QuickAlert.show(
+      context: context,
+      type: scoreStatus() ? QuickAlertType.success : QuickAlertType.error,
+      text: scoreStatus() ? 'Transaction Completed Successfully!' : 'Transaction Failed',
+      onConfirmBtnTap: () {
+        Navigator.pushNamed(context, "/");
+      },
+    );
+    isAlertShown = true;
+  }
   @override
   void initState() {
-    // TODO: implement initState
-    startTimer();
+    questionsCount = quizBrainMulti.getQuestionCount();
     super.initState();
+    startTimer();
   }
-
   void startTimer() {
     timerInQuiz = TimerUtils();
     Stream<int> countdown = timerInQuiz!.countdown(from: 10);
     countdown.listen((int value) {
       setState(() {
-        loadingValue = loadingValue! - 0.1;
-        timerValue = timerValue! - 1;
+        loadingValue = value / 10;
+        timerValue = value;
       });
       if (timerValue == 0) {
         timerInQuiz!.cancelTimer();
-        //nextQuestion();
+        nextQuestion();
         restartTimer();
       }
     });
   }
-
   void cancelTimer() {
     timerInQuiz!.cancelTimer();
   }
@@ -51,18 +120,13 @@ class _MultiQScreenState extends State<MultiQScreen> {
     });
     startTimer();
   }
-
   @override
   void dispose() {
-    // TODO: implement dispose
     cancelTimer();
     super.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
-    var questionNumber = 5;
-    var questionsCount = 10;
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -91,15 +155,12 @@ class _MultiQScreenState extends State<MultiQScreen> {
                       iconColor: Colors.white,
                       bColor: Colors.white,
                       function: () {
-                        // Navigator.pop(context);
-                        // Navigator.pop(context);
-
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
                             builder: (context) => const HomePage(),
                           ),
-                          (route) => false,
+                              (route) => false,
                         );
                       },
                     ),
@@ -170,12 +231,32 @@ class _MultiQScreenState extends State<MultiQScreen> {
               const SizedBox(
                 height: 48,
               ),
-              Padding(
+
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: quizBrainMulti.getOptions().length,
+            itemBuilder: (context, index) {
+              String choice = quizBrainMulti.getOptions()[index];
+              bool isSelected = userChoice == index;
+              bool isAnswerCorrect = isCorrect != null && isCorrect! && isSelected;
+              bool isAnswerWrong = isCorrect != null && !isCorrect! && isSelected;
+
+              return Padding(
                 padding: const EdgeInsets.only(bottom: 12),
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: isOptionSelected ? null : () { // Disable button if an option has been selected
+                    setState(() {
+                      userChoice = index;
+                      checkAnswer();
+                      nextBtnAvailable = true;
+                      isVisible = true;
+                      isOptionSelected = true; // Update the flag to indicate that an option has been selected
+                    });
+                  },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
+                    disabledBackgroundColor: isAnswerCorrect ? Colors.green : isAnswerWrong ? Colors.red : Colors.white,
+                    backgroundColor: isAnswerCorrect ? Colors.green : isAnswerWrong ? Colors.red : Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
@@ -184,14 +265,14 @@ class _MultiQScreenState extends State<MultiQScreen> {
                       horizontal: 16,
                     ),
                   ),
-                  child: const Row(
+                  child: Row(
                     children: [
-                      SizedBox(width: 24),
+                      const SizedBox(width: 24),
                       Expanded(
                         child: Center(
                           child: Text(
-                            'Bremen',
-                            style: TextStyle(
+                            choice,
+                            style: const TextStyle(
                               color: kL2,
                               fontWeight: FontWeight.w500,
                               fontSize: 18,
@@ -199,90 +280,38 @@ class _MultiQScreenState extends State<MultiQScreen> {
                           ),
                         ),
                       ),
-                      Icon(
-                        Icons.check_rounded,
-                        color: kL2,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 12, horizontal: 16),
-                  ),
-                  child: const Row(
-                    children: [
-                      SizedBox(
-                        width: 24,
-                      ),
-                      Expanded(
-                        child: Center(
-                          child: Text(
-                            'Bremen',
-                            style: TextStyle(
-                                color: kL2,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 18),
-                          ),
+                      if (isSelected)
+                        Icon(
+                          isAnswerCorrect ? Icons.check_rounded : Icons.close_rounded,
+                          color: kL2,
                         ),
-                      ),
-                      Icon(
-                        Icons.check_rounded,
-                        color: kL2,
-                      ),
                     ],
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: kG1,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 12,
-                      horizontal: 16,
-                    ),
-                  ),
-                  child: const Row(
-                    children: [
-                      SizedBox(
-                        width: 24,
-                      ),
-                      Expanded(
-                        child: Center(
-                          child: Text(
-                            'Gaza',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 18),
-                          ),
-                        ),
-                      ),
-                      Icon(
-                        Icons.check_rounded,
-                        color: Colors.white,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              );
+            },
+          ),
+
               const SizedBox(
-                height: 48,
+                height: 5,
+              ),
+              Visibility(
+                visible: isVisible,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    TextButton(
+                      onPressed: nextBtnAvailable ? nextQuestion : null,
+                      child: Text(
+                        "Next",
+                        style: TextStyle(
+                          color: nextBtnAvailable ? Colors.white : Colors.grey,
+                          fontSize: 20,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

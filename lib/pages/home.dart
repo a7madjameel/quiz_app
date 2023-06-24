@@ -57,7 +57,7 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 'Let\'s Play',
                 style: TextStyle(
                   fontSize: 32,
@@ -66,10 +66,10 @@ class _HomePageState extends State<HomePage> {
                   fontFamily: kFontFamily,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 8,
               ),
-              Text(
+              const Text(
                 'Be the First!',
                 style: TextStyle(
                   fontSize: 18,
@@ -77,7 +77,7 @@ class _HomePageState extends State<HomePage> {
                   fontFamily: kFontFamily,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 24,
               ),
               ListView.builder(
