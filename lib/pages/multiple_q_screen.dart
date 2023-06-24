@@ -19,18 +19,20 @@ class MultiQScreen extends StatefulWidget {
 
 class _MultiQScreenState extends State<MultiQScreen> {
   TimerUtils? timerInQuiz;
-  double? loadingValue;
-  int? timerValue;
+  double? loadingValue = 1.0;
+  int? timerValue = 10;
   QuizBrainMulti quizBrainMulti = QuizBrainMulti();
   int? userChoice;
   bool? isCorrect;
   int questionsCount = 0;
   int correctAnswersCount = 0;
-  int? score ;
+  int? score;
+
   int questionNumber = 1;
   bool nextBtnAvailable = false;
   bool isVisible = false;
   bool isOptionSelected = false;
+
   void checkAnswer() {
     int correctAnswer = quizBrainMulti.getQuestionAnswer();
     cancelTimer();
@@ -51,14 +53,15 @@ class _MultiQScreenState extends State<MultiQScreen> {
       });
     }
   }
+
   void nextQuestion() {
     quizBrainMulti.nextQuestion();
     restartTimer();
     setState(() {
-      isOptionSelected=!isOptionSelected;
+      isOptionSelected = !isOptionSelected;
 
       if (questionNumber != questionsCount) {
-        userChoice =null;
+        userChoice = null;
         //allChoicesBtn = true;
         nextBtnAvailable = false;
         isVisible = false;
@@ -70,7 +73,8 @@ class _MultiQScreenState extends State<MultiQScreen> {
       }
     });
   }
-   bool scoreStatus()=>score!> 50?true:false;
+
+  bool scoreStatus() => score! > 50 ? true : false;
 
   bool isAlertShown = false;
 
@@ -81,26 +85,30 @@ class _MultiQScreenState extends State<MultiQScreen> {
     QuickAlert.show(
       context: context,
       type: scoreStatus() ? QuickAlertType.success : QuickAlertType.error,
-      text: scoreStatus() ? 'Transaction Completed Successfully!' : 'Transaction Failed',
+      text: scoreStatus()
+          ? 'Transaction Completed Successfully!'
+          : 'Transaction Failed',
       onConfirmBtnTap: () {
         Navigator.pushNamed(context, "/");
       },
     );
     isAlertShown = true;
   }
+
   @override
   void initState() {
     questionsCount = quizBrainMulti.getQuestionCount();
     super.initState();
     startTimer();
   }
+
   void startTimer() {
     timerInQuiz = TimerUtils();
     Stream<int> countdown = timerInQuiz!.countdown(from: 10);
     countdown.listen((int value) {
       setState(() {
-        loadingValue = value / 10;
-        timerValue = value;
+          loadingValue = value / 10;
+          timerValue = value;
       });
       if (timerValue == 0) {
         timerInQuiz!.cancelTimer();
@@ -109,6 +117,7 @@ class _MultiQScreenState extends State<MultiQScreen> {
       }
     });
   }
+
   void cancelTimer() {
     timerInQuiz!.cancelTimer();
   }
@@ -120,11 +129,13 @@ class _MultiQScreenState extends State<MultiQScreen> {
     });
     startTimer();
   }
+
   @override
   void dispose() {
     cancelTimer();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -160,7 +171,7 @@ class _MultiQScreenState extends State<MultiQScreen> {
                           MaterialPageRoute(
                             builder: (context) => const HomePage(),
                           ),
-                              (route) => false,
+                          (route) => false,
                         );
                       },
                     ),
@@ -231,67 +242,81 @@ class _MultiQScreenState extends State<MultiQScreen> {
               const SizedBox(
                 height: 48,
               ),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: quizBrainMulti.getOptions().length,
+                itemBuilder: (context, index) {
+                  String choice = quizBrainMulti.getOptions()[index];
+                  bool isSelected = userChoice == index;
+                  bool isAnswerCorrect =
+                      isCorrect != null && isCorrect! && isSelected;
+                  bool isAnswerWrong =
+                      isCorrect != null && !isCorrect! && isSelected;
 
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: quizBrainMulti.getOptions().length,
-            itemBuilder: (context, index) {
-              String choice = quizBrainMulti.getOptions()[index];
-              bool isSelected = userChoice == index;
-              bool isAnswerCorrect = isCorrect != null && isCorrect! && isSelected;
-              bool isAnswerWrong = isCorrect != null && !isCorrect! && isSelected;
-
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: ElevatedButton(
-                  onPressed: isOptionSelected ? null : () { // Disable button if an option has been selected
-                    setState(() {
-                      userChoice = index;
-                      checkAnswer();
-                      nextBtnAvailable = true;
-                      isVisible = true;
-                      isOptionSelected = true; // Update the flag to indicate that an option has been selected
-                    });
-                  },
-                  style: ElevatedButton.styleFrom(
-                    disabledBackgroundColor: isAnswerCorrect ? Colors.green : isAnswerWrong ? Colors.red : Colors.white,
-                    backgroundColor: isAnswerCorrect ? Colors.green : isAnswerWrong ? Colors.red : Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 12,
-                      horizontal: 16,
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      const SizedBox(width: 24),
-                      Expanded(
-                        child: Center(
-                          child: Text(
-                            choice,
-                            style: const TextStyle(
-                              color: kL2,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 18,
-                            ),
-                          ),
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: ElevatedButton(
+                      onPressed: isOptionSelected
+                          ? null
+                          : () {
+                              // Disable button if an option has been selected
+                              setState(() {
+                                userChoice = index;
+                                checkAnswer();
+                                nextBtnAvailable = true;
+                                isVisible = true;
+                                isOptionSelected =
+                                    true; // Update the flag to indicate that an option has been selected
+                              });
+                            },
+                      style: ElevatedButton.styleFrom(
+                        disabledBackgroundColor: isAnswerCorrect
+                            ? Colors.green
+                            : isAnswerWrong
+                                ? Colors.red
+                                : Colors.white,
+                        backgroundColor: isAnswerCorrect
+                            ? Colors.green
+                            : isAnswerWrong
+                                ? Colors.red
+                                : Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 12,
+                          horizontal: 16,
                         ),
                       ),
-                      if (isSelected)
-                        Icon(
-                          isAnswerCorrect ? Icons.check_rounded : Icons.close_rounded,
-                          color: kL2,
-                        ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          ),
-
+                      child: Row(
+                        children: [
+                          const SizedBox(width: 24),
+                          Expanded(
+                            child: Center(
+                              child: Text(
+                                choice,
+                                style: const TextStyle(
+                                  color: kL2,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ),
+                          ),
+                          if (isSelected)
+                            Icon(
+                              isAnswerCorrect
+                                  ? Icons.check_rounded
+                                  : Icons.close_rounded,
+                              color: kL2,
+                            ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
               const SizedBox(
                 height: 5,
               ),
