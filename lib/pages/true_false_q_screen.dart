@@ -21,6 +21,7 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
   int? timerValue = 10;
 
   bool nextBtnAvailable = false;
+  bool allChoicesBtn = true;
 
   QuizBrain quizBrain = QuizBrain();
   List<Icon> scoreKeeper = [];
@@ -39,6 +40,7 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
     cancelTimer();
     setState(() {
       nextBtnAvailable = true;
+      allChoicesBtn = false;
     });
     bool correctAnswer = quizBrain.getQuestionAnswer();
     setState(() {
@@ -103,6 +105,7 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
     quizBrain.nextQuestion();
     restartTimer();
     setState(() {
+      allChoicesBtn = true;
       nextBtnAvailable = false;
     });
   }
@@ -218,6 +221,10 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
                     style: const ButtonStyle(
                       backgroundColor: MaterialStatePropertyAll(Colors.green),
                     ),
+                    onPressed: allChoicesBtn == true ? () {
+                      //The user picked true.
+                      checkAnswer(true);
+                    } : null,
                     child: const Text(
                       'True',
                       style: TextStyle(
@@ -225,10 +232,7 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
                         fontSize: 20.0,
                       ),
                     ),
-                    onPressed: () {
-                      //The user picked true.
-                      checkAnswer(true);
-                    },
+
                   ),
                 ),
               ),
@@ -240,6 +244,10 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
                       backgroundColor:
                           const MaterialStatePropertyAll(Colors.red),
                     ),
+                    onPressed: allChoicesBtn == true ? () {
+                      //The user picked false.
+                      checkAnswer(false);
+                    } : null,
                     child: const Text(
                       'False',
                       style: TextStyle(
@@ -247,10 +255,6 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
                         color: Colors.white,
                       ),
                     ),
-                    onPressed: () {
-                      //The user picked false.
-                      checkAnswer(false);
-                    },
                   ),
                 ),
               ),
