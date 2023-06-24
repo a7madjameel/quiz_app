@@ -4,7 +4,6 @@ import 'package:multi_quiz_s_t_tt9/modules/level.dart';
 
 import '../widgets/my_outline_btn.dart';
 
-
 import '../constants.dart';
 import '../widgets/my_outline_btn.dart';
 import 'multiple_q_screen.dart';
@@ -12,29 +11,49 @@ import 'multiple_q_screen.dart';
 class LevelDescription extends StatelessWidget {
   const LevelDescription({Key? key}) : super(key: key);
 
-
   @override
   Widget build(BuildContext context) {
-    final modelRoute = ModalRoute.of(context)?.settings.arguments as Map<String, Level>;
+    final modelRoute =
+        ModalRoute.of(context)?.settings.arguments as Map<String, Level>;
     final args = modelRoute["levelData"];
+
+    void moveToQuestionScreen(context) {
+      if (args!.levelText == "Level 1") {
+        Navigator.of(context).pushReplacementNamed("/true_false_question");
+      } else {
+        Navigator.of(context).pushReplacementNamed("/multi_question");
+      }
+    }
 
     return Scaffold(
       body: Container(
         height: double.infinity,
         decoration: BoxDecoration(
-            gradient: LinearGradient(colors:args!.colors, begin: Alignment.topCenter, end: Alignment.bottomCenter)),
+          gradient: LinearGradient(
+            colors: args!.colors,
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
         child: Padding(
           padding: const EdgeInsets.only(top: 74, left: 16, right: 4),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                MYOutlineBtn(icon: Icons.close, function: (){
-                  Navigator.pop(context);
-                }, bColor: Colors.white60, iconColor: Colors.white),
+                MYOutlineBtn(
+                    icon: Icons.close,
+                    function: () {
+                      Navigator.pop(context);
+                    },
+                    bColor: Colors.white60,
+                    iconColor: Colors.white),
                 Padding(
                   padding: const EdgeInsets.all(34.0),
-                  child: Center(child: Image.asset(args.image,)),
+                  child: Center(
+                      child: Image.asset(
+                    args.image,
+                  )),
                 ),
                 Text(
                   args.levelText,
@@ -59,7 +78,9 @@ class LevelDescription extends StatelessWidget {
                       fontWeight: FontWeight.normal,
                       color: Colors.white),
                 ),
-                const SizedBox(height: 60,),
+                const SizedBox(
+                  height: 60,
+                ),
                 ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.all(20.0),
@@ -69,7 +90,9 @@ class LevelDescription extends StatelessWidget {
                         borderRadius: BorderRadius.circular(30.0),
                       ),
                     ),
-                    onPressed: (){},
+                    onPressed: () {
+                      moveToQuestionScreen(context);
+                    },
                     child: const Row(
                       children: [
                         SizedBox(
@@ -79,9 +102,7 @@ class LevelDescription extends StatelessWidget {
                           child: Center(
                             child: Text(
                               "Play",
-                              style: TextStyle(
-                                  fontSize: 24
-                              ),
+                              style: TextStyle(fontSize: 24),
                             ),
                           ),
                         ),

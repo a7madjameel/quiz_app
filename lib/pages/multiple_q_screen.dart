@@ -3,6 +3,7 @@ import 'package:multi_quiz_s_t_tt9/pages/home.dart';
 import 'package:multi_quiz_s_t_tt9/widgets/my_outline_btn.dart';
 
 import '../constants.dart';
+import '../modules/timer_utils.dart';
 
 class MultiQScreen extends StatefulWidget {
   const MultiQScreen({Key? key}) : super(key: key);
@@ -12,13 +13,59 @@ class MultiQScreen extends StatefulWidget {
 }
 
 class _MultiQScreenState extends State<MultiQScreen> {
+  TimerUtils? timerInQuiz;
+  double? loadingValue = 1;
+  int? timerValue = 10;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    startTimer();
+    super.initState();
+  }
+
+  void startTimer() {
+    timerInQuiz = TimerUtils();
+    Stream<int> countdown = timerInQuiz!.countdown(from: 10);
+    countdown.listen((int value) {
+      setState(() {
+        loadingValue = loadingValue! - 0.1;
+        timerValue = timerValue! - 1;
+      });
+      if (timerValue == 0) {
+        timerInQuiz!.cancelTimer();
+        //nextQuestion();
+        restartTimer();
+      }
+    });
+  }
+
+  void cancelTimer() {
+    timerInQuiz!.cancelTimer();
+  }
+
+  void restartTimer() {
+    setState(() {
+      loadingValue = 1;
+      timerValue = 10;
+    });
+    startTimer();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    cancelTimer();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     var questionNumber = 5;
     var questionsCount = 10;
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
               kBlueBg,
@@ -50,7 +97,7 @@ class _MultiQScreenState extends State<MultiQScreen> {
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => HomePage(),
+                            builder: (context) => const HomePage(),
                           ),
                           (route) => false,
                         );
@@ -86,21 +133,21 @@ class _MultiQScreenState extends State<MultiQScreen> {
                   //   ),
                   // ),
 
-                  Stack(
+                   Stack(
                     alignment: Alignment.center,
                     children: [
                       SizedBox(
                         height: 56,
                         width: 56,
                         child: CircularProgressIndicator(
-                          value: 0.7,
+                          value: loadingValue,
                           color: Colors.white,
                           backgroundColor: Colors.white12,
                         ),
                       ),
                       Text(
-                        '05',
-                        style: TextStyle(
+                        timerValue.toString(),
+                        style: const TextStyle(
                           fontFamily: 'Sf-Pro-Text',
                           fontSize: 24,
                           color: Colors.white,
@@ -112,15 +159,16 @@ class _MultiQScreenState extends State<MultiQScreen> {
 
                   OutlinedButton(
                     onPressed: () {},
-                    child: Icon(
-                      Icons.favorite,
-                      color: Colors.white,
-                    ),
                     style: OutlinedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(25),
                         ),
-                        side: BorderSide(color: Colors.white)),
+                        side: const BorderSide(color: Colors.white)),
+                    child: const Icon(
+                      Icons.favorite,
+                      color: Colors.white,
+                    ),
+
                   )
                 ],
               ),
@@ -131,16 +179,16 @@ class _MultiQScreenState extends State<MultiQScreen> {
               ),
               Text(
                 'question $questionNumber of $questionsCount',
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 18,
                   fontFamily: 'Sf-Pro-Text',
                   color: Colors.white60,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 8,
               ),
-              Text(
+              const Text(
                 'In Which City of Germany Is the Largest Port?',
                 style: TextStyle(
                   fontSize: 32,
@@ -149,7 +197,7 @@ class _MultiQScreenState extends State<MultiQScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 48,
               ),
               Padding(
@@ -161,9 +209,9 @@ class _MultiQScreenState extends State<MultiQScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
-                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                   ),
-                  child: Row(
+                  child: const Row(
                     children: [
                       SizedBox(
                         width: 24,
@@ -196,9 +244,9 @@ class _MultiQScreenState extends State<MultiQScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
-                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                   ),
-                  child: Row(
+                  child: const Row(
                     children: [
                       SizedBox(
                         width: 24,
@@ -231,9 +279,9 @@ class _MultiQScreenState extends State<MultiQScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
-                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                   ),
-                  child: Row(
+                  child: const Row(
                     children: [
                       SizedBox(
                         width: 24,
@@ -257,7 +305,7 @@ class _MultiQScreenState extends State<MultiQScreen> {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 48,
               ),
             ],
