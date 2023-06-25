@@ -1,16 +1,19 @@
-# multi_quiz_s_t_tt9
+# Quiz_app
 
 A new Flutter project.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+Good Code Architecture and OOP.
+Create Level class.
+Levels List. (List View Builder)
+Description Screen. (Receives Function & Level Object)
+Handle Timer.
+Choose the User Answer. (Disable Rest Buttons, stop the timer)
+Score Keeper.
+Alert Dialog and the result.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+The first 4 steps: all team in lecture 
+Handel timer : Zaki
+Score Keeper: Ahmed Alayoubi
+Alert Dialog and the result : Ahmed Jameel and Ahmed Alayoubi

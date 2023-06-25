@@ -35,17 +35,14 @@ class _HomePageState extends State<HomePage> {
             icon: Icons.favorite,
             iconColor: kBlueIcon,
             bColor: kGreyFont.withOpacity(0.5),
-            function: () {
-              print("11111");
-            },
+            function: () {},
           ),
           MYOutlineBtn(
-              icon: Icons.person,
-              iconColor: kBlueIcon,
-              bColor: kGreyFont.withOpacity(0.5),
-              function: () {
-                print("0595856486");
-              }),
+            icon: Icons.person,
+            iconColor: kBlueIcon,
+            bColor: kGreyFont.withOpacity(0.5),
+            function: () {},
+          ),
           const SizedBox(
             width: 16,
           )
@@ -88,7 +85,7 @@ class _HomePageState extends State<HomePage> {
                     function: () {
                       moveToStartQuizPage(context, index);
                     },
-                    icon: levels[index].levelStatusIcon!,
+                    icon: levels[index].levelStatusIcon,
                     title: levels[index].title,
                     subtitle: levels[index].levelText,
                     image: levels[index].image,

@@ -1,12 +1,15 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:multi_quiz_s_t_tt9/pages/home.dart';
 import 'package:multi_quiz_s_t_tt9/widgets/my_outline_btn.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
+
 import '../constants.dart';
 import '../modules/multipe_choice/quizBrainMultiple.dart';
 import '../modules/timer_utils.dart';
+
 class MultiQScreen extends StatefulWidget {
   const MultiQScreen({Key? key}) : super(key: key);
 
@@ -16,23 +19,24 @@ class MultiQScreen extends StatefulWidget {
 
 class _MultiQScreenState extends State<MultiQScreen> {
   TimerUtils? timerInQuiz;
-  double? loadingValue=1;
-  int? timerValue=10;
+  double? loadingValue = 1;
+  int? timerValue = 10;
   QuizBrainMulti quizBrainMulti = QuizBrainMulti();
   int? userChoice;
   bool? isCorrect;
   int questionsCount = 0;
   int correctAnswersCount = 0;
-  int? score ;
+  int? score;
   int questionNumber = 1;
   bool nextBtnAvailable = false;
   bool isVisible = false;
   bool isOptionSelected = false;
+
   void checkAnswer() {
     int correctAnswer = quizBrainMulti.getQuestionAnswer();
     cancelTimer();
     setState(() {
-      isOptionSelected=!isOptionSelected;
+      isOptionSelected = !isOptionSelected;
 
       if (correctAnswer == userChoice) {
         isCorrect = true;
@@ -50,24 +54,26 @@ class _MultiQScreenState extends State<MultiQScreen> {
       });
     }
   }
+
   void nextQuestion() {
-    quizBrainMulti.nextQuestion();
     restartTimer();
+    quizBrainMulti.nextQuestion();
     setState(() {
-      isOptionSelected=!isOptionSelected;
+      isOptionSelected = !isOptionSelected;
       if (questionNumber != questionsCount) {
-        userChoice =null;
-        //allChoicesBtn = true;
+        userChoice = null;
         nextBtnAvailable = false;
         isVisible = false;
         questionNumber++;
       } else {
         score = (correctAnswersCount * 100 / questionsCount).round();
         showCustomAlert();
+        cancelTimer();
       }
     });
   }
-  bool scoreStatus()=>score!>= 50?true:false;
+
+  bool scoreStatus() => score! >= 50 ? true : false;
 
   bool isAlertShown = false;
 
@@ -78,19 +84,25 @@ class _MultiQScreenState extends State<MultiQScreen> {
     QuickAlert.show(
       context: context,
       type: scoreStatus() ? QuickAlertType.success : QuickAlertType.error,
-      text: scoreStatus() ? 'Transaction Completed Successfully!' : 'Transaction Failed',
+      text: scoreStatus()
+          ? 'You passed this level'
+          : 'You failed in this level, try Again',
+      title:
+          scoreStatus() ? 'Congratulations! , You win' : 'Good luck, You lost',
       onConfirmBtnTap: () {
         Navigator.pushNamed(context, "/");
       },
     );
     isAlertShown = true;
   }
+
   @override
   void initState() {
     questionsCount = quizBrainMulti.getQuestionCount();
     super.initState();
     startTimer();
   }
+
   void startTimer() {
     timerInQuiz = TimerUtils();
     Stream<int> countdown = timerInQuiz!.countdown(from: 10);
@@ -106,6 +118,7 @@ class _MultiQScreenState extends State<MultiQScreen> {
       }
     });
   }
+
   void cancelTimer() {
     timerInQuiz!.cancelTimer();
   }
@@ -117,11 +130,13 @@ class _MultiQScreenState extends State<MultiQScreen> {
     });
     startTimer();
   }
+
   @override
   void dispose() {
     cancelTimer();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -157,7 +172,7 @@ class _MultiQScreenState extends State<MultiQScreen> {
                           MaterialPageRoute(
                             builder: (context) => const HomePage(),
                           ),
-                              (route) => false,
+                          (route) => false,
                         );
                       },
                     ),
@@ -186,7 +201,6 @@ class _MultiQScreenState extends State<MultiQScreen> {
                     ],
                   ),
                   OutlinedButton(
-                    //99999
                     onPressed: () {},
                     style: OutlinedButton.styleFrom(
                       shape: RoundedRectangleBorder(
@@ -201,6 +215,7 @@ class _MultiQScreenState extends State<MultiQScreen> {
                   )
                 ],
               ),
+              const SizedBox(height: 16),
               Expanded(
                 child: Center(
                   child: Image.asset('assets/images/ballon-b.png'),
@@ -220,7 +235,7 @@ class _MultiQScreenState extends State<MultiQScreen> {
               Text(
                 quizBrainMulti.getQuestionText(),
                 style: const TextStyle(
-                  fontSize: 32,
+                  fontSize: 28,
                   fontFamily: 'Sf-Pro-Text',
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -229,7 +244,6 @@ class _MultiQScreenState extends State<MultiQScreen> {
               const SizedBox(
                 height: 48,
               ),
-
               ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -237,24 +251,38 @@ class _MultiQScreenState extends State<MultiQScreen> {
                 itemBuilder: (context, index) {
                   String choice = quizBrainMulti.getOptions()[index];
                   bool isSelected = userChoice == index;
-                  bool isAnswerCorrect = isCorrect != null && isCorrect! && isSelected;
-                  bool isAnswerWrong = isCorrect != null && !isCorrect! && isSelected;
+                  bool isAnswerCorrect =
+                      isCorrect != null && isCorrect! && isSelected;
+                  bool isAnswerWrong =
+                      isCorrect != null && !isCorrect! && isSelected;
 
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 12),
                     child: ElevatedButton(
-                      onPressed: isOptionSelected ? null : () { // Disable button if an option has been selected
-                        setState(() {
-                          userChoice = index;
-                          checkAnswer();
-                          nextBtnAvailable = true;
-                          isVisible = true;
-                          isOptionSelected = true; // Update the flag to indicate that an option has been selected
-                        });
-                      },
+                      onPressed: isOptionSelected
+                          ? null
+                          : () {
+                              // Disable button if an option has been selected
+                              setState(() {
+                                userChoice = index;
+                                checkAnswer();
+                                nextBtnAvailable = true;
+                                isVisible = true;
+                                isOptionSelected =
+                                    true; // Update the flag to indicate that an option has been selected
+                              });
+                            },
                       style: ElevatedButton.styleFrom(
-                        disabledBackgroundColor: isAnswerCorrect ? Colors.green : isAnswerWrong ? Colors.red : Colors.white,
-                        backgroundColor: isAnswerCorrect ? Colors.green : isAnswerWrong ? Colors.red : Colors.white,
+                        disabledBackgroundColor: isAnswerCorrect
+                            ? Colors.green
+                            : isAnswerWrong
+                                ? Colors.red
+                                : Colors.white,
+                        backgroundColor: isAnswerCorrect
+                            ? Colors.green
+                            : isAnswerWrong
+                                ? Colors.red
+                                : Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15),
                         ),
@@ -280,7 +308,9 @@ class _MultiQScreenState extends State<MultiQScreen> {
                           ),
                           if (isSelected)
                             Icon(
-                              isAnswerCorrect ? Icons.check_rounded : Icons.close_rounded,
+                              isAnswerCorrect
+                                  ? Icons.check_rounded
+                                  : Icons.close_rounded,
                               color: kL2,
                             ),
                         ],
@@ -289,7 +319,6 @@ class _MultiQScreenState extends State<MultiQScreen> {
                   );
                 },
               ),
-
               const SizedBox(
                 height: 5,
               ),

@@ -34,7 +34,7 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
   int counter = 10;
   bool isVisible = false;
 
-  int? score ;
+  int? score;
 
   @override
   void initState() {
@@ -114,21 +114,20 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
     quizBrain.nextQuestion();
     restartTimer();
     setState(() {
-      if(questionNumber != questionsCount) {
+      if (questionNumber != questionsCount) {
         allChoicesBtn = true;
         nextBtnAvailable = false;
         isVisible = false;
         questionNumber++;
-      }
-      else
-      {
+      } else {
         score = (correctAnswersCount * 100 / questionsCount).round();
         showCustomAlert();
+        cancelTimer();
       }
     });
   }
 
-  bool scoreStatus()=>score!>= 50?true:false;
+  bool scoreStatus() => score! >= 50 ? true : false;
   bool isAlertShown = false;
 
   void showCustomAlert() {
@@ -138,13 +137,18 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
     QuickAlert.show(
       context: context,
       type: scoreStatus() ? QuickAlertType.success : QuickAlertType.error,
-      text: scoreStatus() ? 'Transaction Completed Successfully!' : 'Transaction Failed',
+      text: scoreStatus()
+          ? 'You passed this level'
+          : 'You failed in this level, try Again',
+      title:
+          scoreStatus() ? 'Congratulations! , You win' : 'Good luck, You lost',
       onConfirmBtnTap: () {
         Navigator.pushNamed(context, "/");
       },
     );
     isAlertShown = true;
   }
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -188,7 +192,7 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
                           MaterialPageRoute(
                             builder: (context) => const HomePage(),
                           ),
-                              (route) => false,
+                          (route) => false,
                         );
                       },
                     ),
@@ -255,9 +259,9 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
                     ),
                     onPressed: allChoicesBtn == true
                         ? () {
-                      //The user picked true.
-                      checkAnswer(true);
-                    }
+                            //The user picked true.
+                            checkAnswer(true);
+                          }
                         : null,
                     child: const Text(
                       'True',
@@ -275,13 +279,13 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
                   child: ElevatedButton(
                     style: const ButtonStyle().copyWith(
                       backgroundColor:
-                      const MaterialStatePropertyAll(Colors.red),
+                          const MaterialStatePropertyAll(Colors.red),
                     ),
                     onPressed: allChoicesBtn == true
                         ? () {
-                      //The user picked false.
-                      checkAnswer(false);
-                    }
+                            //The user picked false.
+                            checkAnswer(false);
+                          }
                         : null,
                     child: const Text(
                       'False',
@@ -310,13 +314,13 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
                         "Next",
                         style: nextBtnAvailable == true
                             ? const TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                        )
+                                color: Colors.white,
+                                fontSize: 20,
+                              )
                             : const TextStyle(
-                          color: Colors.grey,
-                          fontSize: 20,
-                        ),
+                                color: Colors.grey,
+                                fontSize: 20,
+                              ),
                       ),
                     ),
                   ],
