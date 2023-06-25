@@ -19,8 +19,8 @@ class MultiQScreen extends StatefulWidget {
 
 class _MultiQScreenState extends State<MultiQScreen> {
   TimerUtils? timerInQuiz;
-  double? loadingValue;
-  int? timerValue;
+  double? loadingValue=1;
+  int? timerValue=10;
   QuizBrainMulti quizBrainMulti = QuizBrainMulti();
   int? userChoice;
   bool? isCorrect;
@@ -219,9 +219,9 @@ class _MultiQScreenState extends State<MultiQScreen> {
               const SizedBox(
                 height: 8,
               ),
-              const Text(
-                'In Which City of Germany Is the Largest Port?',
-                style: TextStyle(
+               Text(
+                quizBrainMulti.getQuestionText(),
+                style: const TextStyle(
                   fontSize: 32,
                   fontFamily: 'Sf-Pro-Text',
                   color: Colors.white,
