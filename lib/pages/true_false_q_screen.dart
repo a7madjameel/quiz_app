@@ -135,6 +135,7 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
       return; // Don't show the alert if it has already been shown
     }
     QuickAlert.show(
+      confirmBtnText: 'Finish',
       context: context,
       type: scoreStatus() ? QuickAlertType.success : QuickAlertType.error,
       text: scoreStatus()

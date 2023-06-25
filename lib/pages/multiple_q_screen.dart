@@ -37,7 +37,6 @@ class _MultiQScreenState extends State<MultiQScreen> {
     cancelTimer();
     setState(() {
       isOptionSelected = !isOptionSelected;
-
       if (correctAnswer == userChoice) {
         isCorrect = true;
         correctAnswersCount++;
@@ -45,7 +44,6 @@ class _MultiQScreenState extends State<MultiQScreen> {
         isCorrect = false;
       }
     });
-
   }
 
   void nextQuestion() {
@@ -75,6 +73,7 @@ class _MultiQScreenState extends State<MultiQScreen> {
       return; // Don't show the alert if it has already been shown
     }
     QuickAlert.show(
+      confirmBtnText: 'Finish',
       context: context,
       type: scoreStatus() ? QuickAlertType.success : QuickAlertType.error,
       text: scoreStatus()
