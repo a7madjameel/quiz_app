@@ -35,6 +35,8 @@ class _MultiQScreenState extends State<MultiQScreen> {
     int correctAnswer = quizBrainMulti.getQuestionAnswer();
     cancelTimer();
     setState(() {
+      isOptionSelected=!isOptionSelected;
+
       if (correctAnswer == userChoice) {
         isCorrect = true;
         correctAnswersCount++;
@@ -56,7 +58,6 @@ class _MultiQScreenState extends State<MultiQScreen> {
     restartTimer();
     setState(() {
       isOptionSelected=!isOptionSelected;
-
       if (questionNumber != questionsCount) {
         userChoice =null;
         //allChoicesBtn = true;
@@ -65,12 +66,11 @@ class _MultiQScreenState extends State<MultiQScreen> {
         questionNumber++;
       } else {
         score = (correctAnswersCount * 100 / questionsCount).round();
-
         showCustomAlert();
       }
     });
   }
-   bool scoreStatus()=>score!> 50?true:false;
+   bool scoreStatus()=>score!>= 50?true:false;
 
   bool isAlertShown = false;
 
