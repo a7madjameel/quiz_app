@@ -19,8 +19,8 @@ class MultiQScreen extends StatefulWidget {
 
 class _MultiQScreenState extends State<MultiQScreen> {
   TimerUtils? timerInQuiz;
-  double? loadingValue=1;
-  int? timerValue=10;
+  double? loadingValue;
+  int? timerValue;
   QuizBrainMulti quizBrainMulti = QuizBrainMulti();
   int? userChoice;
   bool? isCorrect;
