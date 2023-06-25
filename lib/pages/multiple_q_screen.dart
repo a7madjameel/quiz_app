@@ -46,13 +46,6 @@ class _MultiQScreenState extends State<MultiQScreen> {
       }
     });
 
-    if (quizBrainMulti.isFinished()) {
-      Timer(const Duration(seconds: 1), () {
-        setState(() {
-          quizBrainMulti.reset();
-        });
-      });
-    }
   }
 
   void nextQuestion() {
