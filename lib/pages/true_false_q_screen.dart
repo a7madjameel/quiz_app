@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 import '../constants.dart';
 import '../modules/timer_utils.dart';
@@ -23,15 +25,20 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
   bool nextBtnAvailable = false;
   bool allChoicesBtn = true;
 
+  int questionNumber = 1;
+  int questionsCount = 0;
+  int correctAnswersCount = 0;
+
   QuizBrain quizBrain = QuizBrain();
   List<Icon> scoreKeeper = [];
   int counter = 10;
   bool isVisible = false;
 
-  // int? _choice;
+  int? score ;
 
   @override
   void initState() {
+    questionsCount = quizBrain.getQuestionCount();
     startTimer();
     super.initState();
   }
@@ -47,6 +54,7 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
     bool correctAnswer = quizBrain.getQuestionAnswer();
     setState(() {
       if (correctAnswer == userChoice) {
+        correctAnswersCount++;
         scoreKeeper.add(
           const Icon(
             Icons.check,
@@ -79,8 +87,8 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
     Stream<int> countdown = timerInQuiz!.countdown(from: 10);
     countdown.listen((int value) {
       setState(() {
-        loadingValue = value / 10;
-        timerValue = value;
+        loadingValue = loadingValue! - 0.1;
+        timerValue = timerValue! - 1;
       });
       if (timerValue == 0) {
         timerInQuiz!.cancelTimer();
@@ -106,12 +114,37 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
     quizBrain.nextQuestion();
     restartTimer();
     setState(() {
-      allChoicesBtn = true;
-      nextBtnAvailable = false;
-      isVisible = false;
+      if(questionNumber != questionsCount) {
+        allChoicesBtn = true;
+        nextBtnAvailable = false;
+        isVisible = false;
+        questionNumber++;
+      }
+      else
+      {
+        score = (correctAnswersCount * 100 / questionsCount).round();
+        showCustomAlert();
+      }
     });
   }
 
+  bool scoreStatus()=>score!>= 50?true:false;
+  bool isAlertShown = false;
+
+  void showCustomAlert() {
+    if (isAlertShown) {
+      return; // Don't show the alert if it has already been shown
+    }
+    QuickAlert.show(
+      context: context,
+      type: scoreStatus() ? QuickAlertType.success : QuickAlertType.error,
+      text: scoreStatus() ? 'Transaction Completed Successfully!' : 'Transaction Failed',
+      onConfirmBtnTap: () {
+        Navigator.pushNamed(context, "/");
+      },
+    );
+    isAlertShown = true;
+  }
   @override
   void dispose() {
     // TODO: implement dispose
@@ -155,7 +188,7 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
                           MaterialPageRoute(
                             builder: (context) => const HomePage(),
                           ),
-                          (route) => false,
+                              (route) => false,
                         );
                       },
                     ),
@@ -222,9 +255,9 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
                     ),
                     onPressed: allChoicesBtn == true
                         ? () {
-                            //The user picked true.
-                            checkAnswer(true);
-                          }
+                      //The user picked true.
+                      checkAnswer(true);
+                    }
                         : null,
                     child: const Text(
                       'True',
@@ -242,13 +275,13 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
                   child: ElevatedButton(
                     style: const ButtonStyle().copyWith(
                       backgroundColor:
-                          const MaterialStatePropertyAll(Colors.red),
+                      const MaterialStatePropertyAll(Colors.red),
                     ),
                     onPressed: allChoicesBtn == true
                         ? () {
-                            //The user picked false.
-                            checkAnswer(false);
-                          }
+                      //The user picked false.
+                      checkAnswer(false);
+                    }
                         : null,
                     child: const Text(
                       'False',
@@ -277,13 +310,13 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
                         "Next",
                         style: nextBtnAvailable == true
                             ? const TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                              )
+                          color: Colors.white,
+                          fontSize: 20,
+                        )
                             : const TextStyle(
-                                color: Colors.grey,
-                                fontSize: 20,
-                              ),
+                          color: Colors.grey,
+                          fontSize: 20,
+                        ),
                       ),
                     ),
                   ],
