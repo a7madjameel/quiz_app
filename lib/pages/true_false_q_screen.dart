@@ -79,8 +79,8 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
     Stream<int> countdown = timerInQuiz!.countdown(from: 10);
     countdown.listen((int value) {
       setState(() {
-        loadingValue = loadingValue! - 0.1;
-        timerValue = timerValue! - 1;
+        loadingValue = value / 10;
+        timerValue = value;
       });
       if (timerValue == 0) {
         timerInQuiz!.cancelTimer();
