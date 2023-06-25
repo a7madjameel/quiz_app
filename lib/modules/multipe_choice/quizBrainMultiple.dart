@@ -34,6 +34,11 @@ class QuizBrainMulti {
     return _questionBank[_questionNumber].questionAnswer;
   }
 
+  int getQuestionCount() {
+    return _questionBank.length;
+  }
+
+
   List<String> getOptions() {
     return _questionBank[_questionNumber].options;
   }
